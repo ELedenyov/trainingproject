@@ -22,11 +22,7 @@ public class RunnerApp {
 //        fillingDB.doAction();
 //
         EntityRepository entityRepository = context.getBean(EntityRepository.class);
-//        try {
-//            entityRepository.update();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
+
         int countRow = entityRepository.countRow();
         int pool = 10;
         int step = countRow/100;
@@ -40,6 +36,7 @@ public class RunnerApp {
             while (count < countRow) {
                 try {
                     entityRepository.update(count, step);
+//                    entityRepository.selectForUpdate(count, step);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -55,30 +52,6 @@ public class RunnerApp {
                 System.out.println("exception!!!!");
             }
         }
-//        int countRow = entityRepository.countRow();
-//        int pool = 10;
-//        int step = countRow/100;
-//
-//        GetCountLimit getCountLimit = new GetCountLimit();
-//        getCountLimit.setCount(0);
-//        getCountLimit.setStep(step);
-//
-//        Runnable task = () -> {
-//            int count = getCountLimit.getCount();
-//            while (count < countRow) {
-//                entityRepository.selectForUpdate(count, step);
-//                count = getCountLimit.getCount();
-//            }
-//        };
-//
-//        for (int i = 0; i < pool; i++) {
-//            new Thread(task).start();
-//            try {
-//                Thread.sleep(15);
-//            } catch (InterruptedException e) {
-//                System.out.println("exception!!!!");
-//            }
-//        }
     }
 }
 
