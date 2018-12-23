@@ -1,0 +1,29 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "net.ltgt.gradle:gradle-apt-plugin:0.19"
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.6.RELEASE"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:2.0.6.RELEASE"
+    }
+}
+
+ext['mysql.version'] = '6.0.6'
+ext['log4j2.version']     = '2.11.0'
+ext['byte-buddy.version'] = '1.8.12'
+
+subprojects {
+    group 'by.fertigi'
+    version '0.0.1'
+
+    apply plugin: 'java'
+    apply plugin: 'net.ltgt.apt'
+
+    repositories {
+        mavenCentral()
+    }
+}

@@ -8,18 +8,99 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
 
+import java.sql.SQLException;
+
 @SpringBootApplication
 @Import(DbConfig.class)
 public class RunnerApp {
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(RunnerApp.class, args);
 
-        EntityRepository bean = context.getBean(EntityRepository.class);
-//        bean.doQuery();
-        bean.selectForUpdate();
 
 //        добавление данных в базу
-//        FillingDB bean = context.getBean(FillingDB.class);
-//        bean.doAction();
+//        FillingDB fillingDB = context.getBean(FillingDB.class);
+//        fillingDB.doAction();
+//
+        EntityRepository entityRepository = context.getBean(EntityRepository.class);
+//        try {
+//            entityRepository.update();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+        int countRow = entityRepository.countRow();
+        int pool = 10;
+        int step = countRow/100;
+
+        GetCountLimit getCountLimit = new GetCountLimit();
+        getCountLimit.setCount(0);
+        getCountLimit.setStep(step);
+
+        Runnable task = ()->{
+            int count = getCountLimit.getCount();
+            while (count < countRow) {
+                try {
+                    entityRepository.update(count, step);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                count = getCountLimit.getCount();
+            }
+        };
+
+        for (int i = 0; i < pool; i++) {
+            new Thread(task).start();
+            try {
+                Thread.sleep(15);
+            } catch (InterruptedException e) {
+                System.out.println("exception!!!!");
+            }
+        }
+//        int countRow = entityRepository.countRow();
+//        int pool = 10;
+//        int step = countRow/100;
+//
+//        GetCountLimit getCountLimit = new GetCountLimit();
+//        getCountLimit.setCount(0);
+//        getCountLimit.setStep(step);
+//
+//        Runnable task = () -> {
+//            int count = getCountLimit.getCount();
+//            while (count < countRow) {
+//                entityRepository.selectForUpdate(count, step);
+//                count = getCountLimit.getCount();
+//            }
+//        };
+//
+//        for (int i = 0; i < pool; i++) {
+//            new Thread(task).start();
+//            try {
+//                Thread.sleep(15);
+//            } catch (InterruptedException e) {
+//                System.out.println("exception!!!!");
+//            }
+//        }
+    }
+}
+
+class GetCountLimit {
+    private Integer count = 0;
+    private Integer step=0;
+
+    public Integer getStep() {
+        return step;
+    }
+
+    public void setStep(Integer step) {
+        this.step = step;
+    }
+
+    public synchronized Integer getCount() {
+        int returnCount = count;
+        count = count + step;
+        return returnCount;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 }

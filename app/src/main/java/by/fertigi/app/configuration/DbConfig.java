@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.vibur.dbcp.ViburDBCPDataSource;
 
 import javax.sql.DataSource;
 
@@ -34,11 +34,15 @@ public class DbConfig {
 
     @Bean
     public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setUrl(url);
+        ViburDBCPDataSource dataSource = new ViburDBCPDataSource();
+        dataSource.setJdbcUrl(url);
         dataSource.setDriverClassName(driver);
         dataSource.setUsername(user);
         dataSource.setPassword(password);
+        dataSource.setPoolMaxSize(50);
+        dataSource.setPoolInitialSize(50);
+
+        dataSource.start();
         return dataSource;
     }
 

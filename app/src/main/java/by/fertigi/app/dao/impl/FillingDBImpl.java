@@ -28,14 +28,14 @@ public class FillingDBImpl implements FillingDB {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 ps.setString(1, "qwe¥rty");
-                ps.setString(2, "asd¥fgh");
-                ps.setString(3, "tiuo¥uio");
-                ps.setString(4, "jhkl¥hjkl");
+                ps.setString(2, "asdf¥gh");
+                ps.setString(3, "ti¥uouio");
+                ps.setString(4, "jhklh¥jkl");
             }
 
             @Override
             public int getBatchSize() {
-                return 100;
+                return 150000;
             }
         });
     }

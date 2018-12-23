@@ -7,7 +7,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,42 +29,20 @@ public class EntityRepositoryImpl implements EntityRepository{
     }
 
     @Override
-    public void doQuery() {
-        int FETCH_SIZE = 500;//РАЗМЕР_ПОРЦИИ_КОТОРОЙ_ПОДКАЧИВАЮТСЯ_ДАННЫЕ
-        template.setFetchSize(FETCH_SIZE);
-        String sql = "select * from test_table";//нужный sql для этой гигантской выборки
-        template.query(sql, rs -> {
-
-            // Количество колонок в результирующем запросе
-            int columns = rs.getMetaData().getColumnCount();
-            System.out.println("Columns: " + columns);
-            // Перебор строк с данными
-            String str;
-            while(rs.next()){
-                for (int i = 1; i <= columns; i++){
-                    str = rs.getString(i);
-                    if(!Validator.contains(str)){
-                        str = Validator.replace(str);
-                    }
-                    System.out.print(str + "\t");
-                }
-                System.out.println();
-            }
-        });
-    }
-
-    @Override
-    public void selectForUpdate() {
-        final String query = "select * from test_table for update";
-        final String updateQuery = "update test_table2 set field1 = ?, set field2 = ?, set field3 = ?, set field4 = ?, where id = ?";
+    public void selectForUpdate(int selectRow, int step) {
+        try {
+            template.getDataSource().getConnection().setAutoCommit(false);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        final String query = "select * from test_table2 LIMIT ?, ? for update";
         RowCallbackHandler rch = rs -> {
             // Количество колонок в результирующем запросе
             int columns = rs.getMetaData().getColumnCount();
             // Перебор строк с данными
             String str;
-            int count = 0;
             boolean flag = false;
-            do{
+            do {
                 for (int i = 1; i <= columns; i++){
                     str = rs.getString(i);
                     if(!Validator.contains(str)){
@@ -71,8 +51,6 @@ public class EntityRepositoryImpl implements EntityRepository{
                     }
                 }
                 if(flag){
-                    count++;
-                    System.out.println(count);
                     rs.updateRow();
                 }
             } while(rs.next());
@@ -80,10 +58,57 @@ public class EntityRepositoryImpl implements EntityRepository{
 
         PreparedStatementCreator psc = conn -> {
             PreparedStatement ps = conn.prepareStatement(query, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE);
+            ps.setInt(1, selectRow);
+            ps.setInt(2, step);
             return ps;
         };
 
-        template.setFetchSize(500);
         template.query(psc, rch);
+    }
+
+    public int countRow(){
+        Integer integer = template.queryForObject("select count(*) from test_table2", Integer.class);
+        return integer;
+    }
+
+    @Transactional
+    public void update(int start, int step) throws SQLException {
+        String SQL_SELECT = "SELECT * from test_table2 LIMIT ?, ?";
+        String SQL_UPDATE = "UPDATE test_table2 set field1 = ?, field2 = ?, field3 = ?, field4 = ? WHERE id = ?";
+        Connection connection = template.getDataSource().getConnection();
+
+        connection.setAutoCommit(false);
+
+        PreparedStatement selectPS = connection.prepareStatement(SQL_SELECT);
+        selectPS.setInt(1, start);
+        selectPS.setInt(2, step);
+
+        PreparedStatement updatePS = connection.prepareStatement(SQL_UPDATE);
+
+        ResultSet resultSet = selectPS.executeQuery();
+        int columns = resultSet.getMetaData().getColumnCount();
+        System.out.println("columns: " + columns);
+        String[] arrReplace = new String[6];
+
+
+        while (resultSet.next()){
+            updatePS.setInt(5, resultSet.getInt("id"));
+            for (int i = 2; i <= columns; i++) {
+                arrReplace[i] = Validator.replace(resultSet.getString(i));
+            }
+            updatePS.setString(1, arrReplace[2]);
+            updatePS.setString(2, arrReplace[3]);
+            updatePS.setString(3, arrReplace[4]);
+            updatePS.setString(4, arrReplace[5]);
+            updatePS.addBatch();
+        }
+
+        updatePS.executeBatch();
+        connection.commit();
+
+        resultSet.close();
+        selectPS.close();
+        updatePS.close();
+        connection.close();
     }
 }
