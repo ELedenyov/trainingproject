@@ -2,5 +2,5 @@ package by.fertigi.app.dao;
 
 
 public interface FillingDB {
-    void doAction();
+    void doAction(Integer batchSize);
 }

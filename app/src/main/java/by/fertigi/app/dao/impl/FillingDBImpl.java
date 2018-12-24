@@ -24,7 +24,7 @@ public class FillingDBImpl implements FillingDB {
 
     @Override
     @Transactional
-    public void doAction() {
+    public void doAction(Integer batchSize) {
         String SQL_INSERT = "INSERT INTO patient_info (" +
                 "First_Name, Last_Name, Phone, City, State, ZIP, Address, Gender, DOB" +
                 ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); ";
@@ -47,7 +47,7 @@ public class FillingDBImpl implements FillingDB {
 
             @Override
             public int getBatchSize() {
-                return 100000;
+                return batchSize;
             }
         });
     }

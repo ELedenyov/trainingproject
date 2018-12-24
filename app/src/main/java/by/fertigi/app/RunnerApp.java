@@ -1,76 +1,72 @@
 package by.fertigi.app;
 
-//@SpringBootApplication
-//@Import(DbConfig.class)
+import by.fertigi.app.configuration.DbConfig;
+import by.fertigi.app.dao.EntityRepository;
+import by.fertigi.app.service.GetCountLimit;
+import by.fertigi.app.service.StarterApp;
+import by.fertigi.app.util.SQLCreator;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Import;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+@SpringBootApplication
+@Import(DbConfig.class)
 public class RunnerApp {
     public static void main(String[] args) {
-        //ConfigurableApplicationContext context = SpringApplication.run(RunnerApp.class, args);
+        ConfigurableApplicationContext context = SpringApplication.run(RunnerApp.class, args);
+        String tableName = "Patient_Info";
+        List<String> listFields = new ArrayList<>();
+        listFields.add("First_Name");
+        listFields.add("Last_Name");
+        listFields.add("Phone");
+        listFields.add("City");
+        listFields.add("State");
+        listFields.add("ZIP");
+        listFields.add("Address");
+        listFields.add("Gender");
+        listFields.add("DOB");
 
-//        добавление данных в базу
-//        FillingDB fillingDB = context.getBean(FillingDB.class);
-//        for (int i = 0; i < 15; i++) {
-//            fillingDB.doAction();
-//        }
+        String select = SQLCreator.sqlSelectCreator(tableName, listFields);
+        String update = SQLCreator.sqlUpdateCreator(tableName, listFields);
+        System.out.println("Select: " + select);
+        System.out.println("Update: " + update);
 
-
-//start
-//        EntityRepository entityRepository = context.getBean(EntityRepository.class);
-//
-//        ExecutorService executor = Executors.newFixedThreadPool(10);//Thread amount
-//
-//        int countRow = entityRepository.countRow();
-//        int pool = Runtime.getRuntime().availableProcessors();
-//        int step = countRow/1000;
-//
-//
-//        GetCountLimit getCountLimit = new GetCountLimit();
-//        getCountLimit.setCount(0);
-//        getCountLimit.setStep(step);
-//
-//        Runnable task = ()->{
-//            int count = getCountLimit.getCount();
-//            while (count < countRow) {
-//                try {
-//                    entityRepository.update(count, step);
-////                    entityRepository.selectForUpdate(count, step);
-//                } catch (SQLException e) {
-//                    e.printStackTrace();
-//                }
-//                count = getCountLimit.getCount();
-//            }
-//        };
-//
-//        for (int i = 0; i < pool; i++) {
-//            new Thread(task).start();
-//            try {
-//                Thread.sleep(15);
-//            } catch (InterruptedException e) {
-//                System.out.println("exception!!!!");
-//            }
-//        }
-        //finish
+        StarterApp bean = context.getBean(StarterApp.class);
+        bean.run();
+//        bean.insertDataToDB(15);
     }
 }
 
-class GetCountLimit {
-    private Integer count = 0;
-    private Integer step=0;
+/*
+Patient Info:
+First Name
+Last Name
+Phone
+City
+State
+ZIP
+Address
+Gender
+DOB
 
-    public Integer getStep() {
-        return step;
-    }
+Physician info:
+First Name
+Last name
+Phone
+City
+State
+ZIP
+Address
+NPI
 
-    public void setStep(Integer step) {
-        this.step = step;
-    }
-
-    public synchronized Integer getCount() {
-        int returnCount = count;
-        count = count + step;
-        return returnCount;
-    }
-
-    public void setCount(Integer count) {
-        this.count = count;
-    }
-}
+Insurance info:
+Policy
+Group
+*/

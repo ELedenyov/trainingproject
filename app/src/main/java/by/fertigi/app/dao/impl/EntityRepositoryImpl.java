@@ -21,7 +21,6 @@ import java.util.Map;
 @Repository
 public class EntityRepositoryImpl implements EntityRepository{
     private JdbcTemplate template;
-    private Map<String, List<String>> changeEntity = new HashMap<>();
 
     @Autowired
     public EntityRepositoryImpl(JdbcTemplate template) {
@@ -88,8 +87,6 @@ public class EntityRepositoryImpl implements EntityRepository{
 
         ResultSet resultSet = selectPS.executeQuery();
         int columns = resultSet.getMetaData().getColumnCount();
-        System.out.println("columns: " + columns);
-
 
         String[] arrReplace = new String[11];
 

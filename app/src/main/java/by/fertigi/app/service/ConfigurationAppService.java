@@ -19,16 +19,27 @@ public class ConfigurationAppService {
     @Value("${app.config.limit-start}")
     private Integer limitStart;
 
+    @Value("${app.config.batch-size}")
+    private Integer batchSize;
+
     private Map<String, List<String>> entityMap;
 
+    //TODO add initialize
     @PostConstruct
     public void init(){
         //initialize entityMap from config app
         entityMap = new HashMap<>();
     }
 
-
     public ConfigurationAppService() {
+    }
+
+    public Integer getBatchSize() {
+        return batchSize;
+    }
+
+    public void setBatchSize(Integer batchSize) {
+        this.batchSize = batchSize;
     }
 
     public Integer getLimitStart() {
