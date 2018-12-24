@@ -67,14 +67,15 @@ public class EntityRepositoryImpl implements EntityRepository{
     }
 
     public int countRow(){
-        Integer integer = template.queryForObject("select count(*) from test_table2", Integer.class);
+        Integer integer = template.queryForObject("select count(*) from patient_info", Integer.class);
         return integer;
     }
 
     @Transactional
     public void update(int start, int step) throws SQLException {
-        String SQL_SELECT = "SELECT * from test_table2 LIMIT ?, ?";
-        String SQL_UPDATE = "UPDATE test_table2 set field1 = ?, field2 = ?, field3 = ?, field4 = ? WHERE id = ?";
+        String SQL_SELECT = "SELECT id, First_Name, Last_Name, Phone, City, State, ZIP, Address, Gender, DOB from patient_info LIMIT ?, ?";
+        String SQL_FIELDS = "First_Name = ?, Last_Name = ?, Phone = ?, City = ?, State = ?, ZIP = ?, Address = ?, Gender = ?, DOB = ?";
+        String SQL_UPDATE = "UPDATE patient_info set "+ SQL_FIELDS + " WHERE id = ?";
         Connection connection = template.getDataSource().getConnection();
 
         connection.setAutoCommit(false);
@@ -88,11 +89,13 @@ public class EntityRepositoryImpl implements EntityRepository{
         ResultSet resultSet = selectPS.executeQuery();
         int columns = resultSet.getMetaData().getColumnCount();
         System.out.println("columns: " + columns);
-        String[] arrReplace = new String[6];
+
+
+        String[] arrReplace = new String[11];
 
 
         while (resultSet.next()){
-            updatePS.setInt(5, resultSet.getInt("id"));
+            updatePS.setInt(10, resultSet.getInt("id"));
             for (int i = 2; i <= columns; i++) {
                 arrReplace[i] = Validator.replace(resultSet.getString(i));
             }
@@ -100,6 +103,11 @@ public class EntityRepositoryImpl implements EntityRepository{
             updatePS.setString(2, arrReplace[3]);
             updatePS.setString(3, arrReplace[4]);
             updatePS.setString(4, arrReplace[5]);
+            updatePS.setString(5, arrReplace[6]);
+            updatePS.setString(6, arrReplace[7]);
+            updatePS.setString(7, arrReplace[8]);
+            updatePS.setString(8, arrReplace[9]);
+            updatePS.setString(9, arrReplace[10]);
             updatePS.addBatch();
         }
 

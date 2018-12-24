@@ -9,6 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Component
 public class FillingDBImpl implements FillingDB {
@@ -22,20 +25,29 @@ public class FillingDBImpl implements FillingDB {
     @Override
     @Transactional
     public void doAction() {
-        String SQL_INSERT = "INSERT INTO test_table2 (field1, field2, field3, field4) VALUES (?, ?, ?, ?); ";
+        String SQL_INSERT = "INSERT INTO patient_info (" +
+                "First_Name, Last_Name, Phone, City, State, ZIP, Address, Gender, DOB" +
+                ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); ";
+        LocalDateTime localDateTime = LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(12, 40, 30));
+
 
         template.batchUpdate(SQL_INSERT, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 ps.setString(1, "qwe¥rty");
                 ps.setString(2, "asdf¥gh");
-                ps.setString(3, "ti¥uouio");
-                ps.setString(4, "jhklh¥jkl");
+                ps.setString(3, "1234679");
+                ps.setString(4, "Gom¥el");
+                ps.setString(5, "NY");
+                ps.setString(6, "1565498");
+                ps.setString(7, "chapae¥va 2 k 5 kv 29");
+                ps.setString(8, "male");
+                ps.setString(9, localDateTime.toString());
             }
 
             @Override
             public int getBatchSize() {
-                return 150000;
+                return 100000;
             }
         });
     }

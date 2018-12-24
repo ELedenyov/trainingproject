@@ -19,14 +19,19 @@ public class RunnerApp {
 
 //        добавление данных в базу
 //        FillingDB fillingDB = context.getBean(FillingDB.class);
-//        fillingDB.doAction();
-//
+//        for (int i = 0; i < 15; i++) {
+//            fillingDB.doAction();
+//        }
+
+
+//start
         EntityRepository entityRepository = context.getBean(EntityRepository.class);
 
         int countRow = entityRepository.countRow();
-        int pool = 10;
-        int step = countRow/100;
+        int pool = Runtime.getRuntime().availableProcessors();
+        int step = countRow/1000;
 
+        System.out.println("!!!!!!!!!!!!!!!!!!        poool: " + pool);
         GetCountLimit getCountLimit = new GetCountLimit();
         getCountLimit.setCount(0);
         getCountLimit.setStep(step);
@@ -52,6 +57,7 @@ public class RunnerApp {
                 System.out.println("exception!!!!");
             }
         }
+        //finish
     }
 }
 
