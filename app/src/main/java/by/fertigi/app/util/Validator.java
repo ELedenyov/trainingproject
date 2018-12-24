@@ -1,4 +1,4 @@
-package by.fertigi.app.service;
+package by.fertigi.app.util;
 
 import java.util.regex.Pattern;
 
