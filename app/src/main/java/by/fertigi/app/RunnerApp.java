@@ -1,8 +1,6 @@
 package by.fertigi.app;
 
 import by.fertigi.app.configuration.DbConfig;
-import by.fertigi.app.dao.EntityRepository;
-import by.fertigi.app.service.GetCountLimit;
 import by.fertigi.app.service.StarterApp;
 import by.fertigi.app.util.SQLCreator;
 import org.springframework.boot.SpringApplication;
@@ -10,11 +8,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.Map;
 
 @SpringBootApplication
 @Import(DbConfig.class)
@@ -32,6 +29,8 @@ public class RunnerApp {
         listFields.add("Address");
         listFields.add("Gender");
         listFields.add("DOB");
+        Map<String, List<String>> entity = new HashMap<>();
+        entity.put(tableName, listFields);
 
         String select = SQLCreator.sqlSelectCreator(tableName, listFields);
         String update = SQLCreator.sqlUpdateCreator(tableName, listFields);

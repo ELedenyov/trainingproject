@@ -3,26 +3,3 @@ logging:
     org.springframework: info
     by.fertigi: debug
 
-Entity:
-  Patient Info:
-    - First Name
-    - Last Name
-    - Phone
-    - City
-    - State
-    - ZIP
-    - Address
-    - Gender
-    - DOB
-  Physician info:
-    - First Name
-    - Last name
-    - Phone
-    - City
-    - State
-    - ZIP
-    - Address
-    - NPI
-  Insurance info:
-    - Policy
-    - Group
