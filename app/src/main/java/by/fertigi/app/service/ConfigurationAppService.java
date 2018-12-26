@@ -13,8 +13,17 @@ public class ConfigurationAppService {
     private String SQL_UPDATE;
     private String SQL_SELECT_COUNT_ALL;
     private int countRow;
+    private List<String> fields;
 
     public ConfigurationAppService() {
+    }
+
+    public List<String> getFields() {
+        return fields;
+    }
+
+    public void setFields(List<String> fields) {
+        this.fields = fields;
     }
 
     public Integer getBatchSize() {

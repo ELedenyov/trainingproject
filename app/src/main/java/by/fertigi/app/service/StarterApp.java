@@ -48,7 +48,8 @@ public class StarterApp {
                     SQLCreator.sqlSelectCountAllCreator(entity.getKey()),
                     entityRepository.countRow(config.getSQL_SELECT_COUNT_ALL()),
                     0,
-                    config.getStep()
+                    config.getStep(),
+                    entity.getValue()
 
             );
             try {
@@ -88,12 +89,14 @@ public class StarterApp {
     }
 
     //обновление конфигурации под новые данные
-    private void updateConfig(String SQL_SELECT, String SQL_UPDATE, String SQL_SELECT_COUNT_ALL, int CountRow, int start, int step){
+    private void updateConfig(String SQL_SELECT, String SQL_UPDATE, String SQL_SELECT_COUNT_ALL, int CountRow, int start, int step, List<String> fields){
         getCountLimit.setCount(start);
         getCountLimit.setStep(step);
         config.setSQL_SELECT(SQL_SELECT);
         config.setSQL_UPDATE(SQL_UPDATE);
         config.setSQL_SELECT_COUNT_ALL(SQL_SELECT_COUNT_ALL);
         config.setCountRow(CountRow);
+        config.setFields(fields);
+
     }
 }

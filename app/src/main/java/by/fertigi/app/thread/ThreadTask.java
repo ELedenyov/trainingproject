@@ -30,12 +30,19 @@ public class ThreadTask implements Callable<String> {
             try {
                 //TODO edit string.format
                 logger.info(String.format("Count: %s, Step: %s, \nSQL_SELECT: %s \nSQL_UPDATE: %s"), count, config.getStep(), config.getSQL_SELECT(), config.getSQL_UPDATE());
-                entityRepository.update(
+                int[] updateRows = entityRepository.updateWithJdbcTemplate(
                         count,
                         config.getStep(),
                         config.getSQL_SELECT(),
-                        config.getSQL_UPDATE()
+                        config.getSQL_UPDATE(),
+                        config.getFields()
                 );
+//                entityRepository.update(
+//                        count,
+//                        config.getStep(),
+//                        config.getSQL_SELECT(),
+//                        config.getSQL_UPDATE()
+//                );
                 builder.append("[count: ").append(count).append(", ").append("step: ").append(config.getStep()).append("] ");
             } catch (Exception e) {
                 //TODO add logging
