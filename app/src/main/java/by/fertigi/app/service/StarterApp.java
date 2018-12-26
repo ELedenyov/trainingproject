@@ -2,10 +2,12 @@ package by.fertigi.app.service;
 
 import by.fertigi.app.dao.EntityRepository;
 import by.fertigi.app.dao.FillingDB;
+import by.fertigi.app.thread.ThreadTask;
 import by.fertigi.app.util.SQLCreator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +21,7 @@ public class StarterApp {
     private GetCountLimit getCountLimit;
     private EntityRepository entityRepository;
     private FillingDB fillingDB;
+    private static final Logger logger = LogManager.getLogger(StarterApp.class);
 
     public StarterApp(
             ConfigurationAppService config,
@@ -31,55 +34,26 @@ public class StarterApp {
         this.fillingDB = fillingDB;
     }
 
-    public void run(){
+    public void run() {
 
-        Callable<String> task = ()->{
-            int count = getCountLimit.getCount();
-            StringBuilder builder = new StringBuilder("Completed: \n");
-            while (count < config.getCountRow()) {
-                try {
-                    entityRepository.update(
-                            count,
-                            config.getStep(),
-                            config.getSQL_SELECT(),
-                            config.getSQL_UPDATE()
-                    );
-                    builder.append("[count: ").append(count).append(", ").append("step: ").append(config.getStep()).append("] ");
-                } catch (Exception e) {
-                    //TODO add logging
-                    e.printStackTrace();
-                }
-                count = getCountLimit.getCount();
-            }
-            return builder.toString();
-        };
-
-        //TODO вынести в метод и размер зависит от config.getAmountThread()
-        List<Callable<String>> taskList = new ArrayList<>();
-        taskList.add(task);
-        taskList.add(task);
-        taskList.add(task);
-        taskList.add(task);
+        List<Callable<String>> taskList
+                = getListCallable(config.getAmountThread(), new ThreadTask(getCountLimit, config, entityRepository));
 
         ExecutorService executorService = Executors.newFixedThreadPool(config.getAmountThread());
 
         for (Map.Entry<String, List<String>> entity : config.getEntityMap().entrySet()) {
-            getCountLimit.setCount(0);
-            getCountLimit.setStep(config.getStep());
+            updateConfig(
+                    SQLCreator.sqlSelectCreator(entity.getKey(), entity.getValue()),
+                    SQLCreator.sqlUpdateCreator(entity.getKey(), entity.getValue()),
+                    SQLCreator.sqlSelectCountAllCreator(entity.getKey()),
+                    entityRepository.countRow(config.getSQL_SELECT_COUNT_ALL()),
+                    0,
+                    config.getStep()
 
-            config.setSQL_SELECT(SQLCreator.sqlSelectCreator(entity.getKey(), entity.getValue()));
-            config.setSQL_UPDATE(SQLCreator.sqlUpdateCreator(entity.getKey(), entity.getValue()));
-            config.setSQL_SELECT_COUNT_ALL(SQLCreator.sqlSelectCountAllCreator(entity.getKey()));
-            config.setCountRow(entityRepository.countRow(config.getSQL_SELECT_COUNT_ALL()));
-
+            );
             try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                executorService.invokeAll(taskList).stream()
+                executorService.invokeAll(taskList)
+                        .stream()
                         .map(f -> {
                             try {
                                 return f.get();
@@ -89,21 +63,37 @@ public class StarterApp {
                             return null;
                         })
                         .forEach(r -> System.out.println("Work result = " + r));
-                //sleep!
-                Thread.sleep(20000);
             } catch (InterruptedException e) {
+                logger.error("Message: " + e.getMessage() + "\n" + "StackTrace: \n" + e.getStackTrace());
                 e.printStackTrace();
             }
         }
 
         executorService.shutdown();
-
     }
 
-//        добавление данных в базу
-    public void insertDataToDB(Integer amountReplay){
+    //добавление данных в базу
+    public void insertDataToDB(Integer amountReplay) {
         for (int i = 0; i < amountReplay; i++) {
             fillingDB.doAction(config.getBatchSize());
         }
+    }
+
+    private List<Callable<String>> getListCallable(int size, Callable<String> task) {
+        ArrayList<Callable<String>> tasks = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            tasks.add(task);
+        }
+        return tasks;
+    }
+
+    //обновление конфигурации под новые данные
+    private void updateConfig(String SQL_SELECT, String SQL_UPDATE, String SQL_SELECT_COUNT_ALL, int CountRow, int start, int step){
+        getCountLimit.setCount(start);
+        getCountLimit.setStep(step);
+        config.setSQL_SELECT(SQL_SELECT);
+        config.setSQL_UPDATE(SQL_UPDATE);
+        config.setSQL_SELECT_COUNT_ALL(SQL_SELECT_COUNT_ALL);
+        config.setCountRow(CountRow);
     }
 }

@@ -13,7 +13,7 @@ import java.util.Map;
 @Configuration
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "app-config")
-public class ConfigApp {
+public class AppConfig {
 
     @Value("${app-config.config.amount-thread}")
     private Integer amountThread;
