@@ -1,35 +1,18 @@
 package by.fertigi.app.service;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service
 public class ConfigurationAppService {
-    @Value("${app.config.amount-thread}")
     private Integer amountThread;
-
-    @Value("${app.config.step}")
     private Integer step;
-
-    @Value("${app.config.limit-start}")
     private Integer limitStart;
-
-    @Value("${app.config.batch-size}")
     private Integer batchSize;
-
     private Map<String, List<String>> entityMap;
-
-    //TODO add initialize
-    @PostConstruct
-    public void init(){
-        //initialize entityMap from config app
-        entityMap = new HashMap<>();
-    }
+    private String SQL_SELECT;
+    private String SQL_UPDATE;
+    private String SQL_SELECT_COUNT_ALL;
+    private int countRow;
 
     public ConfigurationAppService() {
     }
@@ -72,5 +55,37 @@ public class ConfigurationAppService {
 
     public void setEntityMap(Map<String, List<String>> entityMap) {
         this.entityMap = entityMap;
+    }
+
+    public String getSQL_SELECT() {
+        return SQL_SELECT;
+    }
+
+    public void setSQL_SELECT(String SQL_SELECT) {
+        this.SQL_SELECT = SQL_SELECT;
+    }
+
+    public String getSQL_UPDATE() {
+        return SQL_UPDATE;
+    }
+
+    public void setSQL_UPDATE(String SQL_UPDATE) {
+        this.SQL_UPDATE = SQL_UPDATE;
+    }
+
+    public String getSQL_SELECT_COUNT_ALL() {
+        return SQL_SELECT_COUNT_ALL;
+    }
+
+    public void setSQL_SELECT_COUNT_ALL(String SQL_SELECT_COUNT_ALL) {
+        this.SQL_SELECT_COUNT_ALL = SQL_SELECT_COUNT_ALL;
+    }
+
+    public int getCountRow() {
+        return countRow;
+    }
+
+    public void setCountRow(int countRow) {
+        this.countRow = countRow;
     }
 }

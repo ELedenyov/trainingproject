@@ -2,4 +2,21 @@ logging:
   level:
     org.springframework: info
     by.fertigi: debug
-
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/training?nullNamePatternMatchesAll=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false
+    username: root
+    password: root
+  profiles:
+    active: dev
+app-config:
+  config:
+    amount-thread: 4
+    step: 1000
+    limit-start: 0
+    batch-size: 10000
+  entity:
+    patient_info: [First_Name, Last_Name, Phone, City, State, ZIP, Address, Gender, DOB]
+    physician_info: [First_Name, Last_Name, Phone, City, State, ZIP, Address, NPI]
+    insurance_info: [Policy, Group_field]

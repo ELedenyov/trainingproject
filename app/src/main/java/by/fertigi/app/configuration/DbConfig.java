@@ -13,7 +13,6 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableTransactionManagement
-@PropertySource(value = { "classpath:application.properties" })
 public class DbConfig {
     @Value("${spring.datasource.driver-class-name}")
     private String driver;
