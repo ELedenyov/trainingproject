@@ -16,6 +16,6 @@ public class RunnerApp {
 
         StarterApp bean = context.getBean(StarterApp.class);
         bean.run();
-//        bean.insertDataToDB(15);
+//        bean.insertDataToDB(2);
     }
 }

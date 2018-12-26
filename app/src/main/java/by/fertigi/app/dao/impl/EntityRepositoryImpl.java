@@ -102,10 +102,20 @@ public class EntityRepositoryImpl implements EntityRepository {
                 SQL_SELECT,
                 (RowMapper<List<String>>) (rs, rowNum) -> {
                     ArrayList<String> row = new ArrayList<>();
+                    StringBuilder builder = new StringBuilder();
+                    boolean flag = false;
                     for (String field : fields) {
-                        row.add(Validator.replace(rs.getString(field)));
+                        String strRow = rs.getString(field);
+                        builder.append(strRow);
+                        row.add(Validator.replace(strRow));
                     }
-                    return row;
+                    if(!Validator.contains(builder.toString())){
+
+                        row.add(rs.getString("id"));
+                        return row;
+                    } else {
+                        return null;
+                    }
                 },
                 limit,
                 step);
@@ -115,8 +125,10 @@ public class EntityRepositoryImpl implements EntityRepository {
         logger.info("batchUpdate ");
         List<Object[]> batch = new ArrayList<Object[]>();
         for (List<String> field : fields) {
-            Object[] values = field.toArray();
-            batch.add(values);
+            if(field != null){
+                Object[] values = field.toArray();
+                batch.add(values);
+            }
         }
 
         int[] updateCounts = template.batchUpdate(SQL_UPDATE, batch);

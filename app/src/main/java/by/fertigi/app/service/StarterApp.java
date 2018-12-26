@@ -17,11 +17,11 @@ import java.util.concurrent.Executors;
 
 @Component
 public class StarterApp {
+    private static final Logger logger = LogManager.getLogger(StarterApp.class);
     private ConfigurationAppService config;
     private GetCountLimit getCountLimit;
     private EntityRepository entityRepository;
     private FillingDB fillingDB;
-    private static final Logger logger = LogManager.getLogger(StarterApp.class);
 
     public StarterApp(
             ConfigurationAppService config,
@@ -46,7 +46,6 @@ public class StarterApp {
                     SQLCreator.sqlSelectCreator(entity.getKey(), entity.getValue()),
                     SQLCreator.sqlUpdateCreator(entity.getKey(), entity.getValue()),
                     SQLCreator.sqlSelectCountAllCreator(entity.getKey()),
-                    entityRepository.countRow(config.getSQL_SELECT_COUNT_ALL()),
                     0,
                     config.getStep(),
                     entity.getValue()
@@ -89,13 +88,13 @@ public class StarterApp {
     }
 
     //обновление конфигурации под новые данные
-    private void updateConfig(String SQL_SELECT, String SQL_UPDATE, String SQL_SELECT_COUNT_ALL, int CountRow, int start, int step, List<String> fields){
+    private void updateConfig(String SQL_SELECT, String SQL_UPDATE, String SQL_SELECT_COUNT_ALL, int start, int step, List<String> fields){
         getCountLimit.setCount(start);
         getCountLimit.setStep(step);
         config.setSQL_SELECT(SQL_SELECT);
         config.setSQL_UPDATE(SQL_UPDATE);
         config.setSQL_SELECT_COUNT_ALL(SQL_SELECT_COUNT_ALL);
-        config.setCountRow(CountRow);
+        config.setCountRow(entityRepository.countRow(SQL_SELECT_COUNT_ALL));
         config.setFields(fields);
 
     }
