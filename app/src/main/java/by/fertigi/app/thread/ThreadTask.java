@@ -9,14 +9,12 @@ import org.apache.logging.log4j.Logger;
 import java.util.concurrent.Callable;
 
 public class ThreadTask implements Callable<String> {
-    private GetCountLimit getCountLimit;
     private ConfigurationAppService config;
     private EntityRepository entityRepository;
     private static final Logger logger = LogManager.getLogger(ThreadTask.class);
 
 
-    public ThreadTask(GetCountLimit getCountLimit, ConfigurationAppService config, EntityRepository entityRepository) {
-        this.getCountLimit = getCountLimit;
+    public ThreadTask(ConfigurationAppService config, EntityRepository entityRepository) {
         this.config = config;
         this.entityRepository = entityRepository;
     }
@@ -24,32 +22,23 @@ public class ThreadTask implements Callable<String> {
 
     @Override
     public String call() throws Exception {
-        int count = getCountLimit.getCount();
+        int count = config.getCount();
         StringBuilder builder = new StringBuilder("Completed: \n");
         while (count < config.getCountRow()) {
             try {
-                //TODO edit string.format
-                //logger.info(String.format("Count: %s, Step: %s, \nSQL_SELECT: %s \nSQL_UPDATE: %s"), count, config.getStep(), config.getSQL_SELECT(), config.getSQL_UPDATE());
-//                int[] updateRows = entityRepository.updateWithJdbcTemplate(
-//                        count,
-//                        config.getStep(),
-//                        config.getSQL_SELECT(),
-//                        config.getSQL_UPDATE(),
-//                        config.getFields()
-//                );
-                entityRepository.update(
+                int[] updateRows = entityRepository.updateWithJdbcTemplate(
                         count,
                         config.getStep(),
                         config.getSQL_SELECT(),
-                        config.getSQL_UPDATE()
+                        config.getSQL_UPDATE(),
+                        config.getFields()
                 );
                 builder.append("[count: ").append(count).append(", ").append("step: ").append(config.getStep()).append("] ");
             } catch (Exception e) {
-                //TODO add logging
-                logger.error(e.getMessage() + "\n" + "StackTrace: \n" + e.getStackTrace());
+                logger.error("Message: " + e.getMessage() + "\nStackTrace: \n" + e.getStackTrace());
                 e.printStackTrace();
             }
-            count = getCountLimit.getCount();
+            count = config.getCount();
         }
         return builder.toString();
     }

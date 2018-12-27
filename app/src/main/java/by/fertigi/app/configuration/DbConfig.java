@@ -3,7 +3,6 @@ package by.fertigi.app.configuration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -39,7 +38,7 @@ public class DbConfig {
         dataSource.setUsername(user);
         dataSource.setPassword(password);
         dataSource.setPoolMaxSize(50);
-        dataSource.setPoolInitialSize(50);
+        dataSource.setPoolInitialSize(4);
 
         dataSource.start();
         return dataSource;

@@ -14,8 +14,19 @@ public class ConfigurationAppService {
     private String SQL_SELECT_COUNT_ALL;
     private int countRow;
     private List<String> fields;
+    private Integer count;
 
     public ConfigurationAppService() {
+    }
+
+    public synchronized Integer getCount() {
+        int returnCount = count;
+        count = count + step;
+        return returnCount;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 
     public List<String> getFields() {

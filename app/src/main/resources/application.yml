@@ -1,7 +1,5 @@
 logging:
-  level:
-    org.springframework: info
-    by.fertigi: debug
+  config: classpath:logback-spring.xml
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver

@@ -1,5 +1,6 @@
 package by.fertigi.app.configuration;
 
+import by.fertigi.app.model.Entity;
 import by.fertigi.app.service.ConfigurationAppService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -27,6 +28,8 @@ public class AppConfig {
     @Value("${app-config.config.batch-size}")
     private Integer batchSize;
 
+    private List<Entity> models;
+
     private Map<String, List<String>> entity;
 
     public Map<String, List<String>> getEntity() {
@@ -37,9 +40,17 @@ public class AppConfig {
         this.entity = entity;
     }
 
+    public List<Entity> getModels() {
+        return models;
+    }
+
+    public void setModels(List<Entity> models) {
+        this.models = models;
+    }
 
     @Bean
     public ConfigurationAppService getConfigurationAppService(){
+        System.out.println(models);
         ConfigurationAppService configurationAppService = new ConfigurationAppService();
         configurationAppService.setAmountThread(amountThread);
         configurationAppService.setBatchSize(batchSize);

@@ -8,16 +8,16 @@ public class ValidatorTest {
 
     @Test
     public void replace() {
-        String badString = "qwe¥rty";
-        String replaceString = "qwerty";
+        String badString = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDE¢FGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+        String replaceString = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
         assertEquals(Validator.replace(badString), replaceString);
     }
 
     @Test
     public void contains() {
-        String stringContainsTrue = "qwertyuiopasdfghjklzxcvbnm1234567890+-!=,.";
-        String stringContainsFalse = "qwertyuiopasdfghjkl¥zxcvbnm1234567890+-!=,.";
+        String stringContainsTrue = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+        String stringContainsFalse = " !\"#$%&'()*+,-./0123456789:¢;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
         assertTrue(Validator.contains(stringContainsTrue));
         assertTrue(!Validator.contains(stringContainsFalse));

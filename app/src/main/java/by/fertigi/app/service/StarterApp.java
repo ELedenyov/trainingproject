@@ -19,17 +19,14 @@ import java.util.concurrent.Executors;
 public class StarterApp {
     private static final Logger logger = LogManager.getLogger(StarterApp.class);
     private ConfigurationAppService config;
-    private GetCountLimit getCountLimit;
     private EntityRepository entityRepository;
     private FillingDB fillingDB;
 
     public StarterApp(
             ConfigurationAppService config,
-            GetCountLimit getCountLimit,
             EntityRepository entityRepository,
             FillingDB fillingDB) {
         this.config = config;
-        this.getCountLimit = getCountLimit;
         this.entityRepository = entityRepository;
         this.fillingDB = fillingDB;
     }
@@ -37,7 +34,7 @@ public class StarterApp {
     public void run() {
 
         List<Callable<String>> taskList
-                = getListCallable(config.getAmountThread(), new ThreadTask(getCountLimit, config, entityRepository));
+                = getListCallable(config.getAmountThread(), new ThreadTask(config, entityRepository));
 
         ExecutorService executorService = Executors.newFixedThreadPool(config.getAmountThread());
 
@@ -62,7 +59,7 @@ public class StarterApp {
                             }
                             return null;
                         })
-                        .forEach(r -> System.out.println("Work result = " + r));
+                        .forEach(r -> logger.info("Work result = " + r));
             } catch (InterruptedException e) {
                 logger.error("Message: " + e.getMessage() + "\n" + "StackTrace: \n" + e.getStackTrace());
                 e.printStackTrace();
@@ -72,7 +69,6 @@ public class StarterApp {
         executorService.shutdown();
     }
 
-    //добавление данных в базу
     public void insertDataToDB(Integer amountReplay) {
         for (int i = 0; i < amountReplay; i++) {
             fillingDB.doAction(config.getBatchSize());
@@ -87,15 +83,20 @@ public class StarterApp {
         return tasks;
     }
 
-    //обновление конфигурации под новые данные
     private void updateConfig(String SQL_SELECT, String SQL_UPDATE, String SQL_SELECT_COUNT_ALL, int start, int step, List<String> fields){
-        getCountLimit.setCount(start);
-        getCountLimit.setStep(step);
+        config.setCount(start);
         config.setSQL_SELECT(SQL_SELECT);
         config.setSQL_UPDATE(SQL_UPDATE);
         config.setSQL_SELECT_COUNT_ALL(SQL_SELECT_COUNT_ALL);
         config.setCountRow(entityRepository.countRow(SQL_SELECT_COUNT_ALL));
         config.setFields(fields);
-
+        logger.info("Update config: \n"
+                + "start: " + start + ", step: " + step + "\n"
+                + "sql_select: " + SQL_SELECT + "\n"
+                + "sql_update: " + SQL_UPDATE + "\n"
+                + "sql_select_count_all: " + SQL_SELECT_COUNT_ALL + "\n"
+                + "count row: " + config.getCountRow() + "\n"
+                + "fields: " + fields + "\n"
+        );
     }
 }
