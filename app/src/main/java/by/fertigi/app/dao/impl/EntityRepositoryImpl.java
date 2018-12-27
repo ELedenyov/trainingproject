@@ -1,12 +1,11 @@
 package by.fertigi.app.dao.impl;
 
 import by.fertigi.app.dao.EntityRepository;
-import by.fertigi.app.util.Validator;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import by.fertigi.app.rowmapper.RowMapperEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +14,7 @@ import java.util.List;
 
 @Repository
 public class EntityRepositoryImpl implements EntityRepository {
-    private static final Logger logger = LogManager.getLogger(EntityRepositoryImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(EntityRepositoryImpl.class);
     private JdbcTemplate template;
 
     @Autowired
@@ -28,19 +27,13 @@ public class EntityRepositoryImpl implements EntityRepository {
     }
 
     @Transactional
-    public int[] updateWithJdbcTemplate(Integer start, Integer step, String SQL_SELECT, String SQL_UPDATE, List<String> fields, String idStr) {
+    public int[] updateWithJdbcTemplate(Integer start, Integer step, String SQL_SELECT, String SQL_UPDATE, List<String> fields, String idStr){
         logger.info("updateWithJdbcTemplate: start");
         logger.info("limit: " + start +
                 " step: " + step +
                 "\nsql_select: " + SQL_SELECT +
                 "\nsql_update: " + SQL_UPDATE
         );
-
-        try {
-            throw new Exception("updateWithJdbcTemplate exception");
-        } catch (Exception e){
-            logger.error(e.getMessage());
-        }
         List<List<String>> listRow = getListRow(SQL_SELECT, start, step, fields, idStr);
         int[] ints = batchUpdate(listRow, SQL_UPDATE);
         logger.info("updateWithJdbcTemplate: batch update = " + ints.length);
@@ -49,26 +42,7 @@ public class EntityRepositoryImpl implements EntityRepository {
 
     private List<List<String>> getListRow(String SQL_SELECT, Integer limit, Integer step, List<String> fields, String idStr) {
         logger.info("getListRow: " + SQL_SELECT + "; " + "\n" + "limit start: " + limit + " step: " + step);
-        return template.query(
-                SQL_SELECT,
-                (RowMapper<List<String>>) (rs, rowNum) -> {
-                    ArrayList<String> row = new ArrayList<>();
-                    StringBuilder builder = new StringBuilder();
-                    boolean flag = false;
-                    for (String field : fields) {
-                        String strRow = rs.getString(field);
-                        builder.append(strRow);
-                        row.add(Validator.replace(strRow));
-                    }
-                    if(!Validator.contains(builder.toString())){
-                        row.add(rs.getString(idStr));
-                        return row;
-                    } else {
-                        return null;
-                    }
-                },
-                limit,
-                step);
+        return template.query(SQL_SELECT, new RowMapperEntity(fields, idStr), limit, step);
     }
 
     private int[] batchUpdate(List<List<String>> listFields, String SQL_UPDATE) {

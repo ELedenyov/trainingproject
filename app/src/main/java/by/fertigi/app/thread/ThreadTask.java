@@ -1,23 +1,22 @@
 package by.fertigi.app.thread;
 
 import by.fertigi.app.dao.EntityRepository;
-import by.fertigi.app.service.ConfigurationAppService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import by.fertigi.app.model.ConfigurationAppService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Callable;
 
 public class ThreadTask implements Callable<String> {
     private ConfigurationAppService config;
     private EntityRepository entityRepository;
-    private static final Logger logger = LogManager.getLogger(ThreadTask.class);
+    private static final Logger logger = LoggerFactory.getLogger(ThreadTask.class);
 
 
     public ThreadTask(ConfigurationAppService config, EntityRepository entityRepository) {
         this.config = config;
         this.entityRepository = entityRepository;
     }
-
 
     @Override
     public String call() throws Exception {
@@ -35,8 +34,8 @@ public class ThreadTask implements Callable<String> {
                 );
                 builder.append("[count: ").append(count).append(", ").append("step: ").append(config.getStep()).append("] ");
             } catch (Exception e) {
-                logger.error("Message: " + e.getMessage() + "\nStackTrace: \n" + e.getStackTrace());
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
+                throw e;
             }
             count = config.getCount();
         }

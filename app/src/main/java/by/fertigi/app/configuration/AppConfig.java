@@ -1,11 +1,9 @@
 package by.fertigi.app.configuration;
 
 import by.fertigi.app.model.EntityInfo;
-import by.fertigi.app.service.ConfigurationAppService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
@@ -37,14 +35,35 @@ public class AppConfig {
         this.models = models;
     }
 
-    @Bean
-    public ConfigurationAppService getConfigurationAppService(){
-        ConfigurationAppService configurationAppService = new ConfigurationAppService();
-        configurationAppService.setAmountThread(amountThread);
-        configurationAppService.setBatchSize(batchSize);
-        configurationAppService.setLimitStart(limitStart);
-        configurationAppService.setStep(step);
-        configurationAppService.setEntityInfos(models);
-        return configurationAppService;
+    public Integer getAmountThread() {
+        return amountThread;
+    }
+
+    public void setAmountThread(Integer amountThread) {
+        this.amountThread = amountThread;
+    }
+
+    public Integer getStep() {
+        return step;
+    }
+
+    public void setStep(Integer step) {
+        this.step = step;
+    }
+
+    public Integer getLimitStart() {
+        return limitStart;
+    }
+
+    public void setLimitStart(Integer limitStart) {
+        this.limitStart = limitStart;
+    }
+
+    public Integer getBatchSize() {
+        return batchSize;
+    }
+
+    public void setBatchSize(Integer batchSize) {
+        this.batchSize = batchSize;
     }
 }

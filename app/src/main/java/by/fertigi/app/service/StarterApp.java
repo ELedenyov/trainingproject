@@ -1,17 +1,18 @@
 package by.fertigi.app.service;
 
+import by.fertigi.app.configuration.AppConfig;
 import by.fertigi.app.dao.EntityRepository;
 import by.fertigi.app.dao.FillingDB;
+import by.fertigi.app.model.ConfigurationAppService;
 import by.fertigi.app.model.EntityInfo;
 import by.fertigi.app.thread.ThreadTask;
 import by.fertigi.app.util.SQLCreator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,28 +20,42 @@ import java.util.concurrent.Executors;
 @Component
 public class StarterApp {
     private static final Logger logger = LogManager.getLogger(StarterApp.class);
-    private ConfigurationAppService config;
     private EntityRepository entityRepository;
     private FillingDB fillingDB;
+    private CallableCreatorList<String> callableCreatorList;
+    private AppConfig appConfig;
 
+    @Autowired
     public StarterApp(
-            ConfigurationAppService config,
             EntityRepository entityRepository,
-            FillingDB fillingDB) {
-        this.config = config;
+            FillingDB fillingDB,
+            CallableCreatorList<String> callableCreatorList, AppConfig appConfig) {
         this.entityRepository = entityRepository;
         this.fillingDB = fillingDB;
+        this.callableCreatorList = callableCreatorList;
+        this.appConfig = appConfig;
     }
 
     public void run() {
 
+        ConfigurationAppService configurationAppService = new ConfigurationAppService();
+
         List<Callable<String>> taskList
-                = getListCallable(config.getAmountThread(), new ThreadTask(config, entityRepository));
+                = callableCreatorList.getListCallable(
+                        new ThreadTask(configurationAppService, entityRepository),
+                        appConfig.getAmountThread()
+        );
 
-        ExecutorService executorService = Executors.newFixedThreadPool(config.getAmountThread());
+        ExecutorService executorService = Executors.newFixedThreadPool(appConfig.getAmountThread());
 
-        for (EntityInfo entity: config.getEntityInfos()) {
-            updateConfig(entity, 0);
+        try {
+            throw new Exception("run exception");
+        } catch (Exception e){
+            logger.error(e.getMessage(), e);
+        }
+
+        for (EntityInfo entity: appConfig.getModels()) {
+            updateConfig(entity, 0, configurationAppService);
 
             try {
                 executorService.invokeAll(taskList)
@@ -55,30 +70,16 @@ public class StarterApp {
                         })
                         .forEach(r -> logger.info("Work result = " + r));
             } catch (InterruptedException e) {
-                logger.error("Message: " + e.getMessage() + "\n" + "StackTrace: \n" + e.getStackTrace());
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         }
 
         executorService.shutdown();
     }
 
-    public void insertDataToDB(Integer amountReplay) {
-        for (int i = 0; i < amountReplay; i++) {
-            fillingDB.doAction(config.getBatchSize());
-        }
-    }
-
-    private List<Callable<String>> getListCallable(int size, Callable<String> task) {
-        ArrayList<Callable<String>> tasks = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            tasks.add(task);
-        }
-        return tasks;
-    }
-
-    private void updateConfig(EntityInfo entity, Integer start){
+    private void updateConfig(EntityInfo entity, Integer start, ConfigurationAppService config){
         config.setCount(start);
+        config.setStep(appConfig.getStep());
         config.setSQL_SELECT(SQLCreator.sqlSelectCreator(entity.getTable(), entity.getFields(), entity.getIdName()));
         config.setSQL_UPDATE(SQLCreator.sqlUpdateCreator(entity.getTable(), entity.getFields(), entity.getIdName()));
         config.setSQL_SELECT_COUNT_ALL(SQLCreator.sqlSelectCountAllCreator(entity.getTable()));

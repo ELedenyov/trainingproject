@@ -21,24 +21,13 @@ dependencies {
     compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.6'
 
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-logging'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter'
-    compile group: 'org.springframework.boot', name: 'spring-boot-configuration-processor'
 
-    compile group: 'org.springframework', name: 'spring-core'
-    compile group: 'org.springframework', name: 'spring-beans'
-    compile group: 'org.springframework', name: 'spring-context'
-    compile group: 'org.springframework', name: 'spring-context-support'
     compile group: 'org.springframework', name: 'spring-jdbc'
     compile group: 'org.springframework', name: 'spring-tx'
+
     compile group: 'org.vibur', name: 'vibur-dbcp', version: '21.2'
 
-
-    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.7'
-
-    testCompile group: 'com.h2database', name: 'h2'
     testCompile group: 'junit', name: 'junit'
-    testCompile group: 'org.mockito', name: 'mockito-core'
 }

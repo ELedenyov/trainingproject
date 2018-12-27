@@ -1,4 +1,4 @@
-package by.fertigi.app.service;
+package by.fertigi.app.model;
 
 import by.fertigi.app.model.EntityInfo;
 
@@ -10,7 +10,6 @@ public class ConfigurationAppService {
     private Integer step;
     private Integer limitStart;
     private Integer batchSize;
-    private List<EntityInfo> entityInfos;
     private String SQL_SELECT;
     private String SQL_UPDATE;
     private String SQL_SELECT_COUNT_ALL;
@@ -69,14 +68,6 @@ public class ConfigurationAppService {
 
     public void setStep(Integer step) {
         this.step = step;
-    }
-
-    public List<EntityInfo> getEntityInfos() {
-        return entityInfos;
-    }
-
-    public void setEntityInfos(List<EntityInfo> entityInfos) {
-        this.entityInfos = entityInfos;
     }
 
     public String getSQL_SELECT() {
