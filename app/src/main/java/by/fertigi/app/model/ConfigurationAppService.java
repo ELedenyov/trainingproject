@@ -1,10 +1,5 @@
 package by.fertigi.app.model;
 
-import by.fertigi.app.model.EntityInfo;
-
-import java.util.List;
-import java.util.Map;
-
 public class ConfigurationAppService {
     private Integer amountThread;
     private Integer step;

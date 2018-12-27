@@ -2,13 +2,12 @@ package by.fertigi.app.service;
 
 import by.fertigi.app.configuration.AppConfig;
 import by.fertigi.app.dao.EntityRepository;
-import by.fertigi.app.dao.FillingDB;
 import by.fertigi.app.model.ConfigurationAppService;
 import by.fertigi.app.model.EntityInfo;
 import by.fertigi.app.thread.ThreadTask;
 import by.fertigi.app.util.SQLCreator;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,19 +18,17 @@ import java.util.concurrent.Executors;
 
 @Component
 public class StarterApp {
-    private static final Logger logger = LogManager.getLogger(StarterApp.class);
+    private static final Logger logger = LoggerFactory.getLogger(StarterApp.class);
     private EntityRepository entityRepository;
-    private FillingDB fillingDB;
     private CallableCreatorList<String> callableCreatorList;
     private AppConfig appConfig;
 
     @Autowired
     public StarterApp(
             EntityRepository entityRepository,
-            FillingDB fillingDB,
-            CallableCreatorList<String> callableCreatorList, AppConfig appConfig) {
+            CallableCreatorList<String> callableCreatorList,
+            AppConfig appConfig) {
         this.entityRepository = entityRepository;
-        this.fillingDB = fillingDB;
         this.callableCreatorList = callableCreatorList;
         this.appConfig = appConfig;
     }
