@@ -4,7 +4,9 @@ import by.fertigi.app.model.EntityInfo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.List;
 
@@ -13,8 +15,8 @@ import java.util.List;
 @ConfigurationProperties(prefix = "app-config")
 public class AppConfig {
 
-    @Value("${app-config.config.amount-thread}")
-    private Integer amountThread;
+    @Value("${app-config.config.thread.corepoolsize}")
+    private Integer corePoolSize;
 
     @Value("${app-config.config.step}")
     private Integer step;
@@ -33,14 +35,6 @@ public class AppConfig {
 
     public void setModels(List<EntityInfo> models) {
         this.models = models;
-    }
-
-    public Integer getAmountThread() {
-        return amountThread;
-    }
-
-    public void setAmountThread(Integer amountThread) {
-        this.amountThread = amountThread;
     }
 
     public Integer getStep() {
@@ -65,5 +59,13 @@ public class AppConfig {
 
     public void setBatchSize(Integer batchSize) {
         this.batchSize = batchSize;
+    }
+
+    public Integer getCorePoolSize() {
+        return corePoolSize;
+    }
+
+    public void setCorePoolSize(Integer corePoolSize) {
+        this.corePoolSize = corePoolSize;
     }
 }

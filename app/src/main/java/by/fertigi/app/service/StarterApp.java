@@ -40,10 +40,10 @@ public class StarterApp {
         List<Callable<String>> taskList
                 = callableCreatorList.getListCallable(
                         new ThreadTask(configurationAppService, entityRepository),
-                        appConfig.getAmountThread()
+                        appConfig.getCorePoolSize()
         );
 
-        ExecutorService executorService = Executors.newFixedThreadPool(appConfig.getAmountThread());
+        ExecutorService executorService = Executors.newFixedThreadPool(appConfig.getCorePoolSize());
 
         try {
             throw new Exception("run exception");

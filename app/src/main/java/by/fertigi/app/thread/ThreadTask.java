@@ -24,7 +24,7 @@ public class ThreadTask implements Callable<String> {
         StringBuilder builder = new StringBuilder("Completed: \n");
         while (count < config.getCountRow()) {
             try {
-                int[] updateRows = entityRepository.updateWithJdbcTemplate(
+                entityRepository.updateWithJdbcTemplate(
                         count,
                         config.getStep(),
                         config.getSQL_SELECT(),
@@ -35,7 +35,6 @@ public class ThreadTask implements Callable<String> {
                 builder.append("[count: ").append(count).append(", ").append("step: ").append(config.getStep()).append("] ");
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
-                throw e;
             }
             count = config.getCount();
         }

@@ -28,27 +28,19 @@ public class EntityRepositoryImpl implements EntityRepository {
 
     @Transactional
     public int[] updateWithJdbcTemplate(Integer start, Integer step, String SQL_SELECT, String SQL_UPDATE, List<String> fields, String idStr){
-        logger.info("updateWithJdbcTemplate: start");
-        logger.info("limit: " + start +
-                " step: " + step +
-                "\nsql_select: " + SQL_SELECT +
-                "\nsql_update: " + SQL_UPDATE
-        );
+        logger.info("limit: " + start + " step: " + step + "\nsql_select: " + SQL_SELECT + "\nsql_update: " + SQL_UPDATE);
         List<List<String>> listRow = getListRow(SQL_SELECT, start, step, fields, idStr);
-        int[] ints = batchUpdate(listRow, SQL_UPDATE);
-        logger.info("updateWithJdbcTemplate: batch update = " + ints.length);
-        return ints;
+        return batchUpdate(listRow, SQL_UPDATE);
     }
 
     private List<List<String>> getListRow(String SQL_SELECT, Integer limit, Integer step, List<String> fields, String idStr) {
-        logger.info("getListRow: " + SQL_SELECT + "; " + "\n" + "limit start: " + limit + " step: " + step);
         return template.query(SQL_SELECT, new RowMapperEntity(fields, idStr), limit, step);
     }
 
     private int[] batchUpdate(List<List<String>> listFields, String SQL_UPDATE) {
         List<Object[]> batch = new ArrayList<Object[]>();
         for (List<String> fields : listFields) {
-            if(fields != null){
+            if(fields != null & fields.size() == 0){
                 Object[] values = fields.toArray();
                 batch.add(values);
             }

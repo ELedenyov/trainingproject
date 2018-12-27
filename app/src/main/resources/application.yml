@@ -12,7 +12,8 @@ spring:
     active: dev
 app-config:
   config:
-    amount-thread: 4
+    thread:
+      corepoolsize: 4
     step: 1000
     limit-start: 0
     batch-size: 10000
