@@ -28,20 +28,20 @@ public class EntityRepositoryImpl implements EntityRepository {
     }
 
     @Transactional
-    public int[] updateWithJdbcTemplate(Integer start, Integer step, String SQL_SELECT, String SQL_UPDATE, List<String> fields) {
+    public int[] updateWithJdbcTemplate(Integer start, Integer step, String SQL_SELECT, String SQL_UPDATE, List<String> fields, String idStr) {
         logger.info("updateWithJdbcTemplate: start");
         logger.info("limit: " + start +
                 " step: " + step +
                 "\nsql_select: " + SQL_SELECT +
                 "\nsql_update: " + SQL_UPDATE
         );
-        List<List<String>> listRow = getListRow(SQL_SELECT, start, step, fields);
+        List<List<String>> listRow = getListRow(SQL_SELECT, start, step, fields, idStr);
         int[] ints = batchUpdate(listRow, SQL_UPDATE);
         logger.info("updateWithJdbcTemplate: batch update = " + ints.length);
         return ints;
     }
 
-    private List<List<String>> getListRow(String SQL_SELECT, Integer limit, Integer step, List<String> fields) {
+    private List<List<String>> getListRow(String SQL_SELECT, Integer limit, Integer step, List<String> fields, String idStr) {
         logger.info("getListRow: " + SQL_SELECT + "; " + "\n" + "limit start: " + limit + " step: " + step);
         return template.query(
                 SQL_SELECT,
@@ -55,7 +55,7 @@ public class EntityRepositoryImpl implements EntityRepository {
                         row.add(Validator.replace(strRow));
                     }
                     if(!Validator.contains(builder.toString())){
-                        row.add(rs.getString("id"));
+                        row.add(rs.getString(idStr));
                         return row;
                     } else {
                         return null;
@@ -65,15 +65,15 @@ public class EntityRepositoryImpl implements EntityRepository {
                 step);
     }
 
-    private int[] batchUpdate(List<List<String>> fields, String SQL_UPDATE) {
+    private int[] batchUpdate(List<List<String>> listFields, String SQL_UPDATE) {
         List<Object[]> batch = new ArrayList<Object[]>();
-        for (List<String> field : fields) {
-            if(field != null){
-                Object[] values = field.toArray();
+        for (List<String> fields : listFields) {
+            if(fields != null){
+                Object[] values = fields.toArray();
                 batch.add(values);
             }
         }
-        logger.info("batchUpdate: " + SQL_UPDATE + "; batch update row: " + batch.size());
+        logger.info("batchUpdate: " + SQL_UPDATE + ";\nbatch update row: " + batch.size());
         return template.batchUpdate(SQL_UPDATE, batch);
     }
 }

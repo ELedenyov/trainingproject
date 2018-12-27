@@ -9,13 +9,14 @@ public class SQLCreator {
      * @param listFields
      * @return String sql for select fields from tableName
      */
-    public static String sqlSelectCreator(String tableName, List<String> listFields) {
+    public static String sqlSelectCreator(String tableName, List<String> listFields, String id) {
         StringBuilder sqlBilder = new StringBuilder("select ");
         sqlBilder
                 .append(
                         String.join(", ", listFields)
                 )
-                .append(", id")
+                .append(", ")
+                .append(id)
                 .append(" from ")
                 .append(tableName)
                 .append(" LIMIT ?, ?");
@@ -28,7 +29,7 @@ public class SQLCreator {
      * @param listFields
      * @return String sql for update fields from tableName
      */
-    public static String sqlUpdateCreator(String tableName, List<String> listFields){
+    public static String sqlUpdateCreator(String tableName, List<String> listFields, String id){
         StringBuilder sqlBilder = new StringBuilder("update ");
         sqlBilder
                 .append(tableName)
@@ -37,7 +38,9 @@ public class SQLCreator {
                         String.join(" = ?, ", listFields)
                 )
                 .append(" = ?")
-                .append(" WHERE id = ?");
+                .append(" WHERE ")
+                .append(id)
+                .append(" = ?");
         return sqlBilder.toString();
     }
 

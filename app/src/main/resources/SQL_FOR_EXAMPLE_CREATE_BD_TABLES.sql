@@ -1,7 +1,7 @@
 CREATE DATABASE `training` /*!40100 COLLATE 'utf8_general_ci' */;
 
 CREATE TABLE `insurance_info` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `id_insurance_info` INT(11) NOT NULL AUTO_INCREMENT,
   `Policy` VARCHAR(50) NOT NULL DEFAULT '0',
   `Group_field` VARCHAR(50) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
@@ -11,7 +11,7 @@ CREATE TABLE `insurance_info` (
 ;
 
 CREATE TABLE `patient_info` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `id_patient_info` INT(11) NOT NULL AUTO_INCREMENT,
   `First_Name` VARCHAR(50) NOT NULL,
   `Last_Name` VARCHAR(50) NOT NULL,
   `Phone` VARCHAR(50) NOT NULL,
@@ -28,7 +28,7 @@ CREATE TABLE `patient_info` (
 ;
 
 CREATE TABLE `physician_info` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `id_physician_info` INT(11) NOT NULL AUTO_INCREMENT,
   `First_Name` VARCHAR(50) NOT NULL DEFAULT '0',
   `Last_Name` VARCHAR(50) NOT NULL DEFAULT '0',
   `Phone` VARCHAR(50) NOT NULL DEFAULT '0',

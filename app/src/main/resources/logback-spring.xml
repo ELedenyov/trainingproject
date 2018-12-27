@@ -28,19 +28,20 @@
         </encoder>
     </appender>
 
+    <appender name="ERROR_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
 
-    <appender name="BUSINESS_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>TRACE</level>
+            <level>ERROR</level>
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>
 
-        <file>business.log</file>
+        <file>error.log</file>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 
-            <fileNamePattern>${LOG_DIR}/${SYSTEM_NAME}/business.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+
+            <fileNamePattern>${LOG_DIR}/${SYSTEM_NAME}/error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
 
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>5MB</maxFileSize>
@@ -55,10 +56,13 @@
 
 
     <logger name="{project-package-name}" level="TRACE">
-        <appender-ref ref="BUSINESS_APPENDER" />
+        <appender-ref ref="ROOT_APPENDER" />
     </logger>
     <root level="INFO">
         <appender-ref ref="ROOT_APPENDER" />
+    </root>
+    <root level="ERROR">
+        <appender-ref ref="ERROR_APPENDER" />
     </root>
 
 </configuration>

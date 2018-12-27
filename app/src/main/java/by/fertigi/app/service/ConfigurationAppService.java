@@ -1,5 +1,7 @@
 package by.fertigi.app.service;
 
+import by.fertigi.app.model.EntityInfo;
+
 import java.util.List;
 import java.util.Map;
 
@@ -8,12 +10,12 @@ public class ConfigurationAppService {
     private Integer step;
     private Integer limitStart;
     private Integer batchSize;
-    private Map<String, List<String>> entityMap;
+    private List<EntityInfo> entityInfos;
     private String SQL_SELECT;
     private String SQL_UPDATE;
     private String SQL_SELECT_COUNT_ALL;
     private int countRow;
-    private List<String> fields;
+    private EntityInfo entity;
     private Integer count;
 
     public ConfigurationAppService() {
@@ -29,12 +31,12 @@ public class ConfigurationAppService {
         this.count = count;
     }
 
-    public List<String> getFields() {
-        return fields;
+    public EntityInfo getEntity() {
+        return entity;
     }
 
-    public void setFields(List<String> fields) {
-        this.fields = fields;
+    public void setEntity(EntityInfo entity) {
+        this.entity = entity;
     }
 
     public Integer getBatchSize() {
@@ -69,12 +71,12 @@ public class ConfigurationAppService {
         this.step = step;
     }
 
-    public Map<String, List<String>> getEntityMap() {
-        return entityMap;
+    public List<EntityInfo> getEntityInfos() {
+        return entityInfos;
     }
 
-    public void setEntityMap(Map<String, List<String>> entityMap) {
-        this.entityMap = entityMap;
+    public void setEntityInfos(List<EntityInfo> entityInfos) {
+        this.entityInfos = entityInfos;
     }
 
     public String getSQL_SELECT() {

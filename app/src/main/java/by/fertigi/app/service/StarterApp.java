@@ -2,6 +2,7 @@ package by.fertigi.app.service;
 
 import by.fertigi.app.dao.EntityRepository;
 import by.fertigi.app.dao.FillingDB;
+import by.fertigi.app.model.EntityInfo;
 import by.fertigi.app.thread.ThreadTask;
 import by.fertigi.app.util.SQLCreator;
 import org.apache.logging.log4j.LogManager;
@@ -38,16 +39,9 @@ public class StarterApp {
 
         ExecutorService executorService = Executors.newFixedThreadPool(config.getAmountThread());
 
-        for (Map.Entry<String, List<String>> entity : config.getEntityMap().entrySet()) {
-            updateConfig(
-                    SQLCreator.sqlSelectCreator(entity.getKey(), entity.getValue()),
-                    SQLCreator.sqlUpdateCreator(entity.getKey(), entity.getValue()),
-                    SQLCreator.sqlSelectCountAllCreator(entity.getKey()),
-                    0,
-                    config.getStep(),
-                    entity.getValue()
+        for (EntityInfo entity: config.getEntityInfos()) {
+            updateConfig(entity, 0);
 
-            );
             try {
                 executorService.invokeAll(taskList)
                         .stream()
@@ -83,20 +77,20 @@ public class StarterApp {
         return tasks;
     }
 
-    private void updateConfig(String SQL_SELECT, String SQL_UPDATE, String SQL_SELECT_COUNT_ALL, int start, int step, List<String> fields){
+    private void updateConfig(EntityInfo entity, Integer start){
         config.setCount(start);
-        config.setSQL_SELECT(SQL_SELECT);
-        config.setSQL_UPDATE(SQL_UPDATE);
-        config.setSQL_SELECT_COUNT_ALL(SQL_SELECT_COUNT_ALL);
-        config.setCountRow(entityRepository.countRow(SQL_SELECT_COUNT_ALL));
-        config.setFields(fields);
+        config.setSQL_SELECT(SQLCreator.sqlSelectCreator(entity.getTable(), entity.getFields(), entity.getIdName()));
+        config.setSQL_UPDATE(SQLCreator.sqlUpdateCreator(entity.getTable(), entity.getFields(), entity.getIdName()));
+        config.setSQL_SELECT_COUNT_ALL(SQLCreator.sqlSelectCountAllCreator(entity.getTable()));
+        config.setCountRow(entityRepository.countRow(config.getSQL_SELECT_COUNT_ALL()));
+        config.setEntity(entity);
         logger.info("Update config: \n"
-                + "start: " + start + ", step: " + step + "\n"
-                + "sql_select: " + SQL_SELECT + "\n"
-                + "sql_update: " + SQL_UPDATE + "\n"
-                + "sql_select_count_all: " + SQL_SELECT_COUNT_ALL + "\n"
+                + "start: " + start + ", step: " + config.getStep() + "\n"
+                + "sql_select: " + config.getSQL_SELECT() + "\n"
+                + "sql_update: " + config.getSQL_UPDATE() + "\n"
+                + "sql_select_count_all: " + config.getSQL_SELECT_COUNT_ALL() + "\n"
                 + "count row: " + config.getCountRow() + "\n"
-                + "fields: " + fields + "\n"
+                + "fields: " + config.getEntity().getFields() + "\n"
         );
     }
 }

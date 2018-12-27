@@ -2,7 +2,6 @@ package by.fertigi.app.thread;
 
 import by.fertigi.app.dao.EntityRepository;
 import by.fertigi.app.service.ConfigurationAppService;
-import by.fertigi.app.service.GetCountLimit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,7 +30,8 @@ public class ThreadTask implements Callable<String> {
                         config.getStep(),
                         config.getSQL_SELECT(),
                         config.getSQL_UPDATE(),
-                        config.getFields()
+                        config.getEntity().getFields(),
+                        config.getEntity().getIdName()
                 );
                 builder.append("[count: ").append(count).append(", ").append("step: ").append(config.getStep()).append("] ");
             } catch (Exception e) {

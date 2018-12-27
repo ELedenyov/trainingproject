@@ -11,7 +11,7 @@ public class RunnerApp {
         ConfigurableApplicationContext context = SpringApplication.run(RunnerApp.class, args);
 
         StarterApp bean = context.getBean(StarterApp.class);
-//        bean.run();
-//        bean.insertDataToDB(15);
+        bean.run();
+//        bean.insertDataToDB(2);
     }
 }

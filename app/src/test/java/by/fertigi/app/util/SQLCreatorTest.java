@@ -11,6 +11,7 @@ import static org.junit.Assert.*;
 public class SQLCreatorTest {
     String tableName = "table_name";
     List<String> listFields = new ArrayList<>();
+    String idStr = "id_table_name";
 
     @Before
     public void init(){
@@ -23,15 +24,15 @@ public class SQLCreatorTest {
 
     @Test
     public void sqlSelectCreator() {
-        String SQL_SELECT = "select field1, field2, field3, field4, field5, id from table_name LIMIT ?, ?";
+        String SQL_SELECT = "select field1, field2, field3, field4, field5, id_table_name from table_name LIMIT ?, ?";
 
-        assertEquals(SQLCreator.sqlSelectCreator(tableName, listFields), SQL_SELECT);
+        assertEquals(SQLCreator.sqlSelectCreator(tableName, listFields, idStr), SQL_SELECT);
     }
 
     @Test
     public void sqlUpdateCreator() {
-        String SQL_UPDATE = "update table_name set field1 = ?, field2 = ?, field3 = ?, field4 = ?, field5 = ? WHERE id = ?";
-        assertEquals(SQLCreator.sqlUpdateCreator(tableName, listFields), SQL_UPDATE);
+        String SQL_UPDATE = "update table_name set field1 = ?, field2 = ?, field3 = ?, field4 = ?, field5 = ? WHERE id_table_name = ?";
+        assertEquals(SQLCreator.sqlUpdateCreator(tableName, listFields, idStr), SQL_UPDATE);
     }
 
     @Test

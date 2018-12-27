@@ -14,7 +14,13 @@ app-config:
     step: 1000
     limit-start: 0
     batch-size: 10000
-  entity:
-    patient_info: [First_Name, Last_Name, Phone, City, State, ZIP, Address, Gender, DOB]
-    physician_info: [First_Name, Last_Name, Phone, City, State, ZIP, Address, NPI]
-    insurance_info: [Policy, Group_field]
+  models:
+    - table: patient_info
+      id-name: id_patient_info
+      fields: [First_Name, Last_Name, Phone, City, State, ZIP, Address, Gender, DOB]
+    - table: physician_info
+      id-name: id_physician_info
+      fields: [First_Name, Last_Name, Phone, City, State, ZIP, Address, NPI]
+    - table: insurance_info
+      id-name: id_insurance_info
+      fields: [Policy, Group_field]
