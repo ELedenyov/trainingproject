@@ -55,13 +55,10 @@
     </appender>
 
 
-    <logger name="{project-package-name}" level="TRACE">
-        <appender-ref ref="ROOT_APPENDER" />
-    </logger>
+    <logger name="chapters.configuration" level="INFO"/>
+
     <root level="INFO">
         <appender-ref ref="ROOT_APPENDER" />
-    </root>
-    <root level="ERROR">
         <appender-ref ref="ERROR_APPENDER" />
     </root>
 

@@ -38,8 +38,6 @@ dependencies {
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.7'
 
-    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.1'
-
     testCompile group: 'com.h2database', name: 'h2'
     testCompile group: 'junit', name: 'junit'
     testCompile group: 'org.mockito', name: 'mockito-core'

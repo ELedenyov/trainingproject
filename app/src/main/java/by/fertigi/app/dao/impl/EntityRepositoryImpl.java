@@ -35,6 +35,12 @@ public class EntityRepositoryImpl implements EntityRepository {
                 "\nsql_select: " + SQL_SELECT +
                 "\nsql_update: " + SQL_UPDATE
         );
+
+        try {
+            throw new Exception("updateWithJdbcTemplate exception");
+        } catch (Exception e){
+            logger.error(e.getMessage());
+        }
         List<List<String>> listRow = getListRow(SQL_SELECT, start, step, fields, idStr);
         int[] ints = batchUpdate(listRow, SQL_UPDATE);
         logger.info("updateWithJdbcTemplate: batch update = " + ints.length);
