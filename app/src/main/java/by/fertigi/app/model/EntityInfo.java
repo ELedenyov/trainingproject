@@ -5,7 +5,7 @@ import java.util.List;
 public class EntityInfo {
     //table name
     private String table;
-    //name idName
+    //name id
     private String idName;
     //name fields
     private List<String> fields;

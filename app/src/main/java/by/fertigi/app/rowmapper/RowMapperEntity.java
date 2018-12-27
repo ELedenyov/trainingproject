@@ -17,12 +17,10 @@ public class RowMapperEntity implements RowMapper<List<String>> {
         this.idStr = idStr;
     }
 
-
     @Override
     public List<String> mapRow(ResultSet rs, int rowNum) throws SQLException {
         ArrayList<String> row = new ArrayList<>();
         StringBuilder builder = new StringBuilder();
-        boolean flag = false;
         for (String field : fields) {
             String strRow = rs.getString(field);
             builder.append(strRow);

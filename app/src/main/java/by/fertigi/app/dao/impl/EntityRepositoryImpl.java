@@ -40,7 +40,7 @@ public class EntityRepositoryImpl implements EntityRepository {
     private int[] batchUpdate(List<List<String>> listFields, String SQL_UPDATE) {
         List<Object[]> batch = new ArrayList<Object[]>();
         for (List<String> fields : listFields) {
-            if(fields != null & fields.size() == 0){
+            if(fields != null && fields.size() != 0){
                 Object[] values = fields.toArray();
                 batch.add(values);
             }

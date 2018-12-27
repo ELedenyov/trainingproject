@@ -4,7 +4,6 @@ public class ConfigurationAppService {
     private Integer amountThread;
     private Integer step;
     private Integer limitStart;
-    private Integer batchSize;
     private String SQL_SELECT;
     private String SQL_UPDATE;
     private String SQL_SELECT_COUNT_ALL;
@@ -31,14 +30,6 @@ public class ConfigurationAppService {
 
     public void setEntity(EntityInfo entity) {
         this.entity = entity;
-    }
-
-    public Integer getBatchSize() {
-        return batchSize;
-    }
-
-    public void setBatchSize(Integer batchSize) {
-        this.batchSize = batchSize;
     }
 
     public Integer getLimitStart() {

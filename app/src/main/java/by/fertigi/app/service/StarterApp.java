@@ -34,7 +34,6 @@ public class StarterApp {
     }
 
     public void run() {
-
         ConfigurationAppService configurationAppService = new ConfigurationAppService();
 
         List<Callable<String>> taskList
@@ -45,14 +44,8 @@ public class StarterApp {
 
         ExecutorService executorService = Executors.newFixedThreadPool(appConfig.getCorePoolSize());
 
-        try {
-            throw new Exception("run exception");
-        } catch (Exception e){
-            logger.error(e.getMessage(), e);
-        }
-
         for (EntityInfo entity: appConfig.getModels()) {
-            updateConfig(entity, 0, configurationAppService);
+            updateConfig(entity, appConfig.getLimitStart(), configurationAppService);
 
             try {
                 executorService.invokeAll(taskList)
@@ -61,7 +54,7 @@ public class StarterApp {
                             try {
                                 return f.get();
                             } catch (Exception e) {
-                                e.printStackTrace();
+                                logger.error(e.getMessage(), e);
                             }
                             return null;
                         })

@@ -12,11 +12,10 @@ spring:
     active: dev
 app-config:
   config:
-    thread:
-      corepoolsize: 4
     step: 1000
     limit-start: 0
-    batch-size: 10000
+    thread:
+      core-pool-size: 4
   models:
     - table: patient_info
       id-name: id_patient_info

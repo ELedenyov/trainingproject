@@ -15,7 +15,7 @@ import java.util.List;
 @ConfigurationProperties(prefix = "app-config")
 public class AppConfig {
 
-    @Value("${app-config.config.thread.corepoolsize}")
+    @Value("${app-config.config.thread.core-pool-size}")
     private Integer corePoolSize;
 
     @Value("${app-config.config.step}")
@@ -23,9 +23,6 @@ public class AppConfig {
 
     @Value("${app-config.config.limit-start}")
     private Integer limitStart;
-
-    @Value("${app-config.config.batch-size}")
-    private Integer batchSize;
 
     private List<EntityInfo> models;
 
@@ -51,14 +48,6 @@ public class AppConfig {
 
     public void setLimitStart(Integer limitStart) {
         this.limitStart = limitStart;
-    }
-
-    public Integer getBatchSize() {
-        return batchSize;
-    }
-
-    public void setBatchSize(Integer batchSize) {
-        this.batchSize = batchSize;
     }
 
     public Integer getCorePoolSize() {
