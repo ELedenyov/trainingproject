@@ -19,9 +19,9 @@ import java.util.concurrent.Executors;
 @Component
 public class StarterApp {
     private static final Logger logger = LoggerFactory.getLogger(StarterApp.class);
-    private EntityRepository entityRepository;
-    private CallableCreatorList<String> callableCreatorList;
-    private AppConfig appConfig;
+    private final EntityRepository entityRepository;
+    private final CallableCreatorList<String> callableCreatorList;
+    private final AppConfig appConfig;
 
     @Autowired
     public StarterApp(
@@ -56,7 +56,7 @@ public class StarterApp {
                             } catch (Exception e) {
                                 logger.error(e.getMessage(), e);
                             }
-                            return null;
+                            return "there was an exception";
                         })
                         .forEach(r -> logger.info("Work result = " + r));
             } catch (InterruptedException e) {

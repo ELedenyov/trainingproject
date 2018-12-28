@@ -15,7 +15,7 @@ import java.util.List;
 @Repository
 public class EntityRepositoryImpl implements EntityRepository {
     private static final Logger logger = LoggerFactory.getLogger(EntityRepositoryImpl.class);
-    private JdbcTemplate template;
+    private final JdbcTemplate template;
 
     @Autowired
     public EntityRepositoryImpl(JdbcTemplate template) {

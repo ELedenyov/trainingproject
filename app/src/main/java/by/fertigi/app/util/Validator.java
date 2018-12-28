@@ -3,9 +3,9 @@ package by.fertigi.app.util;
 import java.util.regex.Pattern;
 
 public class Validator {
-    private static String REG_EX_MATCHES = "[\\u0020-\\u007e]+";
-    private static String REG_EX_REPLACE = "[^\\u0020-\\u007e]";
-    private static String STRING_EMPTY = "";
+    private static final String REG_EX_MATCHES = "[\\u0020-\\u007e]+";
+    private static final String REG_EX_REPLACE = "[^\\u0020-\\u007e]";
+    private static final String STRING_EMPTY = "";
 
     /**
      * This method removes invalid characters in the string.

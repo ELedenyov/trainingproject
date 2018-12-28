@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RowMapperEntity implements RowMapper<List<String>> {
-    private List<String> fields;
-    private String idStr;
+    private final List<String> fields;
+    private final String idStr;
 
     public RowMapperEntity(List<String> fields, String idStr) {
         this.fields = fields;

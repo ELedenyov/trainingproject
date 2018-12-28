@@ -8,10 +8,9 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.Callable;
 
 public class ThreadTask implements Callable<String> {
-    private ConfigurationAppService config;
-    private EntityRepository entityRepository;
     private static final Logger logger = LoggerFactory.getLogger(ThreadTask.class);
-
+    private final ConfigurationAppService config;
+    private final EntityRepository entityRepository;
 
     public ThreadTask(ConfigurationAppService config, EntityRepository entityRepository) {
         this.config = config;
